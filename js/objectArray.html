@@ -10,6 +10,7 @@
 <body>
 
 </body>
+<script src="ProductArrayFilteringFunctions.js"></script>
 <script>
 
     var user = {
@@ -1004,13 +1005,42 @@
 
 
     //fiyatı 30 ile 100 arasında kaç adet ürün var?
+
+    console.log( 'fiyatı 30 ile 100 arasında olan ürün sayısı : ' + countProductsInPriceRange(products, 30, 100));
+
     //ismi a harfi ile başlayan ürünleri console a yazdır
+
+    console.log( 'ismi a harfi ile başlayan ürünler : ');
+    console.log( NameFiltering(products, "a"));
+
+    console.log( 'ismi a veya A harfi ile başlamayan ürünler : ');
+    console.log( NameFiltering(products, "a", true, true));
+
     //ismi a harfi ile BİTEN ürünleri console a yazdır
+
+
+    console.log( 'ismi a harfi ile biten ürünler : ' );
+    console.log( NameFiltering(products, "a", false));
+
+    console.log( 'ismi a veya A harfi ile biten ürünler : ' );
+    console.log( NameFiltering(products, "a", false, true));
+
     // id si 10 olan ürünün adını console a yazdır
+
+    console.log( 'id si 10 olan ürünün adı : ' + getProductNameById(products, 10));
+
     //discontinued false olan kaç ürün var
+
+    console.log('discontinued false olan ürün sayısı : ' + countActiveProducts(products));
+
     // en pahalı ürünün adını console a yazdır
+
+    console.log( 'en pahalı ürünün adı : ' + getExtremeProduct(products, 'expensive'));
+
     //en ucuz ürünün adını console a yazdır
-    
+
+    console.log('en ucuz ürünün adı  : ' +  getExtremeProduct(products, 'cheap'));
+
 
 </script>
 
