@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .left-section {
+            width: 50%;
+            padding: 20px;
+        }
+
+        .right-section {
+            width: 50%;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            margin-bottom: 10px;
+        }
+
+        select {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="left-section">
+        <button id="fetchData">Fetch Data</button>
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Unit Price</th>
+                    <th>Stock</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="right-section">
+        <label for="priceFilter">Select Price Range:</label>
+        <select id="priceFilter">
+            <option value="All">All</option>
+            <option value="10">0-10</option>
+            <option value="20">0-20</option>
+            <option value="30">0-30</option>
+            <option value="100">0-100</option>
+            <option value="200">0-200</option>
+            <option value="300">0-300</option>
+            <option value="400">0-400</option>
+            <option value="500">0-500</option>
+        </select>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        const fetchDataButton = document.getElementById('fetchData');
+        const productTable = document.getElementById('productTable');
+        const priceFilter = document.getElementById('priceFilter');
+     // Function to fetch and display data
+        async function fetchData() {
+            try {
+                const response = await axios.get('https://northwind.vercel.app/api/products');
+                const products = response.data;
+                const selectedPrice = parseFloat(priceFilter.value);
+
+                // Clear existing table rows
+                while (productTable.rows.length > 1) {
+                    productTable.deleteRow(1);
+                }
+
+                // Populate the table with filtered products
+                products.forEach(product => {
+                    if (priceFilter.value === 'All' || parseFloat(product.unitPrice) <= selectedPrice) {
+                        const row = productTable.insertRow();
+                        row.insertCell(0).textContent = product.id;
+                        row.insertCell(1).textContent = product.name;
+                        row.insertCell(2).textContent = product.unitPrice;
+                        row.insertCell(3).textContent = product.stock;
+
+                        const deleteButtonCell = row.insertCell(4);
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.addEventListener('click', async () => {
+                            try {
+                                await axios.delete(`https://northwind.now.sh/api/products/${product.id}`);
+                                alert(`Product with ID ${product.id} deleted successfully.`);
+                                // Remove the row from the table
+                                productTable.deleteRow(row.rowIndex);
+                            } catch (error) {
+                                console.error('Error deleting product:', error);
+                            }
+                        });
+                        deleteButtonCell.appendChild(deleteButton);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Add event listener for price range change
+        priceFilter.addEventListener('change', fetchData);
+
+        // Fetch data initially when the page loads
+        fetchDataButton.addEventListener('click', fetchData);
+    </script>
+</body>
+
+</html>
