@@ -86,10 +86,10 @@
         const fetchDataButton = document.getElementById('fetchData');
         const productTable = document.getElementById('productTable');
         const priceFilter = document.getElementById('priceFilter');
-     // Function to fetch and display data
+
         async function fetchData() {
             try {
-                const response = await axios.get('https://northwind.vercel.app/api/products');
+                const response = await axios.get('https://northwind.vercel.app/api/products')
                 const products = response.data;
                 const selectedPrice = parseFloat(priceFilter.value);
 
@@ -98,14 +98,14 @@
                     productTable.deleteRow(1);
                 }
 
-                // Populate the table with filtered products
+             
                 products.forEach(product => {
                     if (priceFilter.value === 'All' || parseFloat(product.unitPrice) <= selectedPrice) {
                         const row = productTable.insertRow();
                         row.insertCell(0).textContent = product.id;
                         row.insertCell(1).textContent = product.name;
                         row.insertCell(2).textContent = product.unitPrice;
-                        row.insertCell(3).textContent = product.stock;
+                        row.insertCell(3).textContent = product.unitsInStock;
 
                         const deleteButtonCell = row.insertCell(4);
                         const deleteButton = document.createElement('button');
@@ -128,10 +128,8 @@
             }
         }
 
-        // Add event listener for price range change
         priceFilter.addEventListener('change', fetchData);
 
-        // Fetch data initially when the page loads
         fetchDataButton.addEventListener('click', fetchData);
     </script>
 </body>
